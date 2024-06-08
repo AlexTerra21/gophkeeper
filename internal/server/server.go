@@ -2,40 +2,60 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net"
+	"strings"
 
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 
+	"github.com/AlexTerra21/gophkeeper/internal/auth"
 	"github.com/AlexTerra21/gophkeeper/internal/config"
-	"github.com/AlexTerra21/gophkeeper/pb"
+	"github.com/AlexTerra21/gophkeeper/internal/storage"
 )
 
-// GRPCServer
-type GRPCServer struct {
-	pb.UnimplementedGophkeeperServer
-	server *grpc.Server
-	config *config.Config
+func logInterceptor(logger *slog.Logger) grpc.UnaryServerInterceptor {
+	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
+		logger.Info("gRPC request",
+			"method", info.FullMethod,
+			"request", req,
+		)
+		return handler(ctx, req)
+	}
 }
 
-// Конструктор GRPCServer
-// func NewGRPCServer(config *config.Config) (*GRPCServer, error) {
-// 	s := grpc.NewServer(grpc.ChainUnaryInterceptor(logInterceptor, authInterceptor))
-// 	return &GRPCServer{
-// 		server: s,
-// 		config: config,
-// 	}, nil
-// }
+func authInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
+	if strings.Contains(info.FullMethod, "Register") || strings.Contains(info.FullMethod, "Login") {
+		return handler(ctx, req)
+	}
+	var token string
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		values := md.Get("authorization")
+		if len(values) > 0 {
+			token = values[0]
+		}
+	}
+	userID := auth.GetUserID(token)
+	newCtx := ctx
+	if userID > 0 {
+		incomCtx, _ := metadata.FromIncomingContext(ctx)
+		newMD := metadata.Pairs("userID", fmt.Sprintf("%d", userID))
+		newCtx = metadata.NewIncomingContext(ctx, metadata.Join(incomCtx, newMD))
+	}
+	return handler(newCtx, req)
+}
 
-func NewGRPCServer(lc fx.Lifecycle, config *config.Config, logger *slog.Logger) *grpc.Server {
-	srv := grpc.NewServer()
+func NewGRPCServer(lc fx.Lifecycle, config *config.Config, logger *slog.Logger, storage *storage.Storage) *grpc.Server {
+	srv := grpc.NewServer(grpc.ChainUnaryInterceptor(logInterceptor(logger), authInterceptor))
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			logger.Info("Starting gRPC server")
 
-			ln, err := net.Listen("tcp", ":9000")
+			addr := "localhost:3200"
+			ln, err := net.Listen("tcp", addr)
 			if err != nil {
 				return err
 			}
@@ -50,7 +70,7 @@ func NewGRPCServer(lc fx.Lifecycle, config *config.Config, logger *slog.Logger) 
 		},
 		OnStop: func(ctx context.Context) error {
 			logger.Info("Gracefully stopping gRPC server")
-
+			storage.Close()
 			srv.GracefulStop()
 
 			return nil

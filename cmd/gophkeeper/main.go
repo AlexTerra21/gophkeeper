@@ -6,12 +6,16 @@ import (
 	"log"
 	"log/slog"
 
-	"github.com/AlexTerra21/gophkeeper/internal/config"
-	"github.com/AlexTerra21/gophkeeper/internal/logger"
-	"github.com/AlexTerra21/gophkeeper/internal/server"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"google.golang.org/grpc"
+
+	"github.com/AlexTerra21/gophkeeper/internal/config"
+	"github.com/AlexTerra21/gophkeeper/internal/logger"
+	"github.com/AlexTerra21/gophkeeper/internal/server"
+	"github.com/AlexTerra21/gophkeeper/internal/service"
+	"github.com/AlexTerra21/gophkeeper/internal/storage"
+	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
 var (
@@ -57,23 +61,25 @@ func App(ctx context.Context) fx.Option {
 			newConfig,
 			newLogger,
 
+			storage.NewStorage,
+
 			// Annotate gRPC server instance as grpc.ServiceRegistrar
 			fx.Annotate(
 				server.NewGRPCServer,
 				fx.As(new(grpc.ServiceRegistrar)),
 			),
 
-			// // Annotate service as generated interface
-			// fx.Annotate(
-			// 	pb.NewGophkeeper,
-			// 	fx.As(new(pb.GophkeeperServer)),
-			// ),
+			// Annotate service as generated interface
+			fx.Annotate(
+				service.New,
+				fx.As(new(pb.GophkeeperServer)),
+			),
 		),
 		fx.Invoke(
 			// Start annotated gRPC server
 			func(grpc.ServiceRegistrar) {},
 
-			// pb.RegisterGophkeeperServer,
+			pb.RegisterGophkeeperServer,
 		),
 		fx.WithLogger(func(logger *slog.Logger) fxevent.Logger {
 			return &fxevent.SlogLogger{Logger: logger}

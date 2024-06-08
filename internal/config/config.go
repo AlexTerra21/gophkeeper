@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	LogLevel   string `json:"log_level"`
-	ConfigPath string
+	LogLevel        string `json:"log_level"`
+	DBConnectString string `json:"db_conn"`
+	ConfigPath      string
 }
 
 // Инициализация конфигурации
@@ -18,6 +19,7 @@ func NewConfig() (*Config, error) {
 
 	flagLogLevel := flag.String("l", "", "log level")
 	flagConfigPath := flag.String("c", "", "config path")
+	flagDBConnectString := flag.String("d", "", "db connection string")
 	flag.Parse()
 
 	config.ConfigPath = *flagConfigPath
@@ -32,6 +34,7 @@ func NewConfig() (*Config, error) {
 	}
 
 	config.LogLevel = priorityString(os.Getenv("LOG_LEVEL"), *flagLogLevel, configFromFile.LogLevel, "info")
+	config.DBConnectString = priorityString(os.Getenv("DATABASE_DSN"), *flagDBConnectString, configFromFile.DBConnectString)
 
 	return config, nil
 }
