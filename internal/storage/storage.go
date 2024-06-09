@@ -18,6 +18,10 @@ type Storage struct {
 	log *slog.Logger
 }
 
+func (s *Storage) GetDB() *pg.DB {
+	return s.db
+}
+
 func NewStorage(cfg *config.Config, log *slog.Logger) (*Storage, error) {
 	storage := &Storage{
 		log: log,

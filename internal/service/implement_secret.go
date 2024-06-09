@@ -43,7 +43,7 @@ func (s *Service) SavePassword(ctx context.Context, req *pb.SavePasswordRequest)
 
 	err = s.storage.SaveSecret(ctx, secret)
 	if err != nil {
-		s.log.Error("Error", "error adding new user", err)
+		s.log.Error("Error", "error adding new secret password", err)
 		if errors.Is(err, errs.ErrConflict) {
 			return nil, status.Errorf(codes.AlreadyExists, "SavePassword: Conflict: %v", err)
 		}
@@ -106,7 +106,7 @@ func (s *Service) SaveCard(ctx context.Context, req *pb.SaveCardRequest) (*pb.Em
 
 	err = s.storage.SaveSecret(ctx, secret)
 	if err != nil {
-		s.log.Error("Error", "error adding new user", err)
+		s.log.Error("Error", "error adding new card", err)
 		if errors.Is(err, errs.ErrConflict) {
 			return nil, status.Errorf(codes.AlreadyExists, "SaveCard: Conflict: %v", err)
 		}
@@ -169,7 +169,7 @@ func (s *Service) SaveText(ctx context.Context, req *pb.SaveTextRequest) (*pb.Em
 
 	err = s.storage.SaveSecret(ctx, secret)
 	if err != nil {
-		s.log.Error("Error", "error adding new user", err)
+		s.log.Error("Error", "error adding new note", err)
 		if errors.Is(err, errs.ErrConflict) {
 			return nil, status.Errorf(codes.AlreadyExists, "SaveText: Conflict: %v", err)
 		}
