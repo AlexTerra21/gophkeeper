@@ -99,7 +99,7 @@ func (s *Service) SaveCard(ctx context.Context, req *pb.SaveCardRequest) (*pb.Em
 
 	secret := storage.Secret{
 		UserID:     userID,
-		SecretType: int(models.SecretTypePassword),
+		SecretType: int(models.SecretTypeCard),
 		SecretName: req.CardName,
 		SecretData: secretData,
 	}
@@ -162,7 +162,7 @@ func (s *Service) SaveText(ctx context.Context, req *pb.SaveTextRequest) (*pb.Em
 
 	secret := storage.Secret{
 		UserID:     userID,
-		SecretType: int(models.SecretTypePassword),
+		SecretType: int(models.SecretTypeText),
 		SecretName: req.Name,
 		SecretData: secretData,
 	}

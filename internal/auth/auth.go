@@ -16,9 +16,8 @@ type claims struct {
 type ContextKey string
 
 const (
-	tokenExp             = time.Hour * 3
-	secretKey            = "supersecretkey"
-	UserIDKey ContextKey = "userID"
+	tokenExp  = time.Hour * 3
+	secretKey = "supersecretkey"
 )
 
 // BuildJWTString создаёт токен и возвращает его в виде строки.

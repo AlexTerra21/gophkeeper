@@ -5,6 +5,8 @@ go 1.21
 require (
 	github.com/go-pg/pg/v10 v10.13.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/imroc/biu v0.0.0-20170329141542-0376ce6761c0
+	github.com/manifoldco/promptui v0.9.0
 	go.uber.org/fx v1.21.1
 	go.uber.org/zap v1.26.0
 	go.uber.org/zap/exp v0.2.0
@@ -14,6 +16,7 @@ require (
 )
 
 require (
+	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect

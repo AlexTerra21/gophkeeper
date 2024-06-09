@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"log/slog"
 	"net"
@@ -9,6 +10,7 @@ import (
 
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/AlexTerra21/gophkeeper/internal/auth"
@@ -47,8 +49,17 @@ func authInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, h
 	return handler(newCtx, req)
 }
 
-func NewGRPCServer(lc fx.Lifecycle, config *config.Config, logger *slog.Logger, storage *storage.Storage) *grpc.Server {
-	srv := grpc.NewServer(grpc.ChainUnaryInterceptor(logInterceptor(logger), authInterceptor))
+func NewGRPCServer(lc fx.Lifecycle, config *config.Config, logger *slog.Logger, storage *storage.Storage) (*grpc.Server, error) {
+
+	tlsCredentials, err := loadTLSCredentials()
+	if err != nil {
+		return nil, fmt.Errorf("cannot load TLS credentials: %v", err)
+	}
+
+	srv := grpc.NewServer(
+		grpc.Creds(tlsCredentials),
+		grpc.ChainUnaryInterceptor(logInterceptor(logger), authInterceptor),
+	)
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
@@ -77,5 +88,21 @@ func NewGRPCServer(lc fx.Lifecycle, config *config.Config, logger *slog.Logger, 
 		},
 	})
 
-	return srv
+	return srv, nil
+}
+
+func loadTLSCredentials() (credentials.TransportCredentials, error) {
+	// Load server's certificate and private key
+	serverCert, err := tls.LoadX509KeyPair("cert/server-cert.pem", "cert/server-key.pem")
+	if err != nil {
+		return nil, err
+	}
+
+	// Create the credentials and return it
+	config := &tls.Config{
+		Certificates: []tls.Certificate{serverCert},
+		ClientAuth:   tls.NoClientCert,
+	}
+
+	return credentials.NewTLS(config), nil
 }

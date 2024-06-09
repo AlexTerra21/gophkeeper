@@ -13,24 +13,6 @@ const (
 
 type SecretType int
 
-// func (s SecretType) String() string {
-// 	switch s {
-// 	case SecretTypeCard:
-// 		return "Bank Card"
-// 	case SecretTypePassword:
-// 		return "Login/Password pair"
-// 	case SecretTypeText:
-// 		return "Text"
-// 	}
-// 	return ""
-// }
-
-// type SecretMetadata struct {
-// 	Name   string
-// 	Type   SecretType
-// 	UserID int
-// }
-
 type Secret interface {
 	ToBinary() ([]byte, error)
 }
@@ -77,16 +59,3 @@ func (t *TextSecret) ToBinary() ([]byte, error) {
 
 	return buff.Bytes(), err
 }
-
-// func NewSecret(secretType SecretType) Secret {
-// 	switch secretType {
-// 	case SecretTypePassword:
-// 		return &PasswordSecret{}
-// 	case SecretTypeCard:
-// 		return &CardSecret{}
-// 	case SecretTypeText:
-// 		return &TextSecret{}
-// 	}
-
-// 	return nil
-// }
