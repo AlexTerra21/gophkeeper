@@ -13,15 +13,18 @@ import (
 	"github.com/AlexTerra21/gophkeeper/internal/errs"
 )
 
+// Хранилище данных
 type Storage struct {
 	db  *pg.DB
 	log *slog.Logger
 }
 
+// Доступ к хранилищу извне
 func (s *Storage) GetDB() *pg.DB {
 	return s.db
 }
 
+// Инициализация хранилища
 func NewStorage(cfg *config.Config, log *slog.Logger) (*Storage, error) {
 	storage := &Storage{
 		log: log,
@@ -39,6 +42,7 @@ func NewStorage(cfg *config.Config, log *slog.Logger) (*Storage, error) {
 	return storage, nil
 }
 
+// Создание схемы таблиц в БД (если не создана ранее)
 func (d *Storage) createSchema() error {
 	models := []interface{}{
 		(*User)(nil),
@@ -56,6 +60,7 @@ func (d *Storage) createSchema() error {
 	return nil
 }
 
+// Закрытие БД
 func (d *Storage) Close() {
 	d.log.Info("Closing DB")
 	d.db.Close()
@@ -133,6 +138,7 @@ func (d *Storage) GetSecret(ctx context.Context, userID int64, name string) (*Se
 	return &secret, nil
 }
 
+// Генерируем "соль" для шифрования пароля
 func generateSalt() ([]byte, error) {
 	salt := make([]byte, 16)
 	if _, err := rand.Read(salt); err != nil {

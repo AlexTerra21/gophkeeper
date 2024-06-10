@@ -6,12 +6,16 @@ import (
 	"github.com/AlexTerra21/gophkeeper/internal/storage"
 )
 
+// Подготовка тестовой среды
 func PrepareTestEnv() (*Service, error) {
 	config, _ := config.NewConfig()
 	config.DBConnectString = "postgresql://gopherkeeper:gopherkeeper@localhost/gopherkeeper_test?sslmode=disable"
 	log, _ := logger.NewLogger(config.LogLevel)
 	storage, err := storage.NewStorage(config, log)
-	ClearTestDB(storage)
+	if err != nil {
+		return nil, err
+	}
+	err = ClearTestDB(storage)
 	if err != nil {
 		return nil, err
 	}
@@ -23,6 +27,7 @@ func PrepareTestEnv() (*Service, error) {
 	return service, nil
 }
 
+// Очистка тестовых таблиц
 func ClearTestDB(storage *storage.Storage) error {
 	db := storage.GetDB()
 	_, err := db.Exec("TRUNCATE secrets")

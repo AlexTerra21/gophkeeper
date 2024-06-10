@@ -31,7 +31,7 @@ func (s *Service) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Em
 	token, err := auth.BuildJWTString(userID)
 	if err == nil {
 		header := metadata.Pairs("Authorization", token)
-		grpc.SendHeader(ctx, header)
+		_ = grpc.SendHeader(ctx, header)
 	}
 
 	return &pb.Empty{}, nil
@@ -55,7 +55,7 @@ func (s *Service) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Empty, e
 	token, err := auth.BuildJWTString(userID)
 	if err == nil {
 		header := metadata.Pairs("Authorization", token)
-		grpc.SendHeader(ctx, header)
+		_ = grpc.SendHeader(ctx, header)
 	}
 	return &pb.Empty{}, nil
 }

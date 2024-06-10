@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
+// Тестирование пары методов SavePassword-GetPassword
 func TestService_SaveGetPassword(t *testing.T) {
 	service, err := PrepareTestEnv()
 	if err != nil {
@@ -110,6 +111,7 @@ func TestService_SaveGetPassword(t *testing.T) {
 
 }
 
+// Тестирование пары методов SaveCard-GetCard
 func TestService_SaveGetCard(t *testing.T) {
 	service, err := PrepareTestEnv()
 	if err != nil {
@@ -215,7 +217,8 @@ func TestService_SaveGetCard(t *testing.T) {
 	}
 }
 
-func TestService_SaveText(t *testing.T) {
+// Тестирование пары методов SaveText-GetText
+func TestService_SaveGetText(t *testing.T) {
 	service, err := PrepareTestEnv()
 	if err != nil {
 		t.Log(err.Error())

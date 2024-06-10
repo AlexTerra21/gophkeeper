@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 )
 
-// Generator generates random bytes and new user id.
+// Generator генерирует случайные байты и новый идентификатор пользователя.
 type Generator interface {
 	GenerateRandomBytes(size int) ([]byte, error)
 }

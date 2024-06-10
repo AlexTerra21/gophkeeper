@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 )
 
+// Типы хранимой информации
 const (
 	SecretTypePassword SecretType = iota + 1
 	SecretTypeCard
@@ -13,15 +14,13 @@ const (
 
 type SecretType int
 
-type Secret interface {
-	ToBinary() ([]byte, error)
-}
-
+// Пароль
 type PasswordSecret struct {
 	Login    string
 	Password string
 }
 
+// Кодирование пароля
 func (p *PasswordSecret) ToBinary() ([]byte, error) {
 	var buff bytes.Buffer
 
@@ -31,6 +30,7 @@ func (p *PasswordSecret) ToBinary() ([]byte, error) {
 	return buff.Bytes(), err
 }
 
+// Информация о банковской карте
 type CardSecret struct {
 	Number     string
 	HolderName string
@@ -38,6 +38,7 @@ type CardSecret struct {
 	Date       string
 }
 
+// Кодирование информации о банковской карте
 func (c *CardSecret) ToBinary() ([]byte, error) {
 	var buff bytes.Buffer
 
@@ -47,10 +48,12 @@ func (c *CardSecret) ToBinary() ([]byte, error) {
 	return buff.Bytes(), err
 }
 
+// Любая текстовая информация
 type TextSecret struct {
 	Text string
 }
 
+// Кодирование любой текстовой информации
 func (t *TextSecret) ToBinary() ([]byte, error) {
 	var buff bytes.Buffer
 

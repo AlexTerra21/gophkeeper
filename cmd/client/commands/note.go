@@ -9,6 +9,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
+// Команда для сохранения заметок (текстовой информации)
 func SaveText(cond *types.Condition) {
 	name := getStringData("Enter brief description note")
 	text := getStringData("Enter note")
@@ -28,6 +29,7 @@ func SaveText(cond *types.Condition) {
 	fmt.Println("Save note successful")
 }
 
+// Команда для загрузки текстовой информации
 func GetText(cond *types.Condition) {
 	name := getStringData("Enter brief description note")
 

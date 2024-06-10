@@ -10,6 +10,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
+// Команда для аутентификации пользователя
 func Login(cond *types.Condition) {
 
 	login := getStringData("Enter login")
@@ -30,6 +31,7 @@ func Login(cond *types.Condition) {
 	fmt.Println("Authenticated successful")
 }
 
+// Команда для регистрации пользователя
 func Register(cond *types.Condition) {
 	login := getStringData("Enter login")
 	password := getPasswordData("Enter password")

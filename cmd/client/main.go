@@ -24,6 +24,8 @@ var (
 
 // go build -o cmd/client/gophkeeper_client.exe -ldflags "-X main.buildVersion=v1.20.0 -X 'main.buildDate=$(date +'%Y/%m/%d %H:%M:%S')' -X 'main.buildCommit=$(git log -1 | grep commit)'" cmd/client/*.go
 // ./cmd/client/gophkeeper_client.exe
+
+// Клиент для GophKeeper
 func main() {
 	ctx := context.Background()
 
@@ -55,6 +57,7 @@ func main() {
 
 }
 
+// Организация главного маню клиента
 func mainMenu(cond *types.Condition) {
 	prompt := promptui.Select{
 		Label: "GophKeepeer",
@@ -79,6 +82,7 @@ func mainMenu(cond *types.Condition) {
 	}
 }
 
+// Пункт меню - Аутентификация
 func clientAuth(cond *types.Condition) {
 	prompt := promptui.Select{
 		Label: "Welcome",
@@ -102,6 +106,7 @@ func clientAuth(cond *types.Condition) {
 	}
 }
 
+// Пункт меню - Сохранение секретной информации
 func saveSecret(cond *types.Condition) {
 	if !cond.ISAuth {
 		fmt.Println("Unauthenticated")
@@ -133,6 +138,7 @@ func saveSecret(cond *types.Condition) {
 
 }
 
+// Пункт меню - Получение секретной информации
 func getSecret(cond *types.Condition) {
 	if !cond.ISAuth {
 		fmt.Println("Unauthenticated")
@@ -163,6 +169,7 @@ func getSecret(cond *types.Condition) {
 	}
 }
 
+// Загрузка сертификатов шифрования для доступа к серверу
 func loadTLSCredentials() (credentials.TransportCredentials, error) {
 	// Load certificate of the CA who signed server's certificate
 	pemServerCA, err := os.ReadFile("cert/ca-cert.pem")

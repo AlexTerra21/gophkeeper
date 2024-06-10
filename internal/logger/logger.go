@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// Инициализация логирования
 func NewLogger(lvl string, opts ...zap.Option) (*slog.Logger, error) {
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
@@ -23,6 +24,7 @@ func NewLogger(lvl string, opts ...zap.Option) (*slog.Logger, error) {
 		nil
 }
 
+// Настройка уровня логирования
 func level(lvl string) zap.AtomicLevel {
 	switch strings.ToLower(lvl) {
 	case "error":

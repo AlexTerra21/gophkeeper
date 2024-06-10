@@ -52,16 +52,17 @@ func main() {
 
 }
 
+// Описание зависимостей приложения
 func App(ctx context.Context) fx.Option {
 	return fx.Options(
 		fx.Provide(
 			// Контекст делаем общедоступным
 			func() context.Context { return ctx },
 
-			newConfig,
-			newLogger,
+			newConfig, // Конфигурация
+			newLogger, // Логирование
 
-			storage.NewStorage,
+			storage.NewStorage, // Хранилище
 
 			// Annotate gRPC server instance as grpc.ServiceRegistrar
 			fx.Annotate(
@@ -79,6 +80,7 @@ func App(ctx context.Context) fx.Option {
 			// Start annotated gRPC server
 			func(grpc.ServiceRegistrar) {},
 
+			// Start service
 			pb.RegisterGophkeeperServer,
 		),
 		fx.WithLogger(func(logger *slog.Logger) fxevent.Logger {
@@ -87,30 +89,12 @@ func App(ctx context.Context) fx.Option {
 	)
 }
 
-func run(
-
-	// Объект жизненного цикла fx
-	lifecycle fx.Lifecycle,
-) {
-	lifecycle.Append(fx.Hook{
-		// Событие при старте
-		OnStart: func(ctx context.Context) error {
-
-			return nil
-		},
-		// Событие при остановке
-		OnStop: func(ctx context.Context) error {
-			// Логика на завершение
-			return nil
-		},
-	})
-}
-
 // Конфигурируем приложение
 func newConfig() (*config.Config, error) {
 	return config.NewConfig()
 }
 
+// Инициализация логера
 func newLogger(cfg *config.Config) (*slog.Logger, error) {
 	lg, err := logger.NewLogger(cfg.LogLevel)
 	if err != nil {

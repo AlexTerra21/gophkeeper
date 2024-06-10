@@ -7,6 +7,7 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
+// Вывод приглашения для ввода строки с текстом
 func getStringData(label string) string {
 	prompt := promptui.Prompt{
 		Label:       label,
@@ -19,6 +20,7 @@ func getStringData(label string) string {
 	return result
 }
 
+// Вывод приглашения для ввода пароля с маскированием.
 func getPasswordData(label string) string {
 	validate := func(input string) error {
 		if len(input) < 1 {

@@ -6,23 +6,23 @@ import (
 	"errors"
 )
 
-// Cryptographer encrypts and decrypts values.
+// Криптограф шифрует и расшифровывает данные
 type Cryptographer interface {
 	Encrypt(src []byte) ([]byte, error)
 	Decrypt(src []byte) ([]byte, error)
 }
 
-// GCMAESCryptographer is cryptographer based on AES with Galois/Counter Mode.
+// GCMAESCryptographer - это криптограф, основанный на AES с режимом Galois/Counter.
 //
-// AES with Galois/Counter Mode (AES-GCM) provides both authenticated encryption (confidentiality and authentication)
-// and the ability to check the integrity and authentication of additional
-// authenticated data (AAD) that is sent in the clear.
+// AES с режимом Galois/Counter (AES-GCM) обеспечивает как аутентифицированное шифрование (конфиденциальность, так и аутентификацию).
+// и возможность проверять целостность и аутентификацию дополнительных
+// аутентифицированных данных (AAD), которые отправляются в открытом виде.
 type GCMAESCryptographer struct {
-	Random Generator // random number generator. It's used to generate the nonce
-	Key    []byte    // key used to encrypt and decrypt the data
+	Random Generator // генератор случайных чисел. Используется для генерации одноразового
+	Key    []byte    // ключ, используемый для шифрования и расшифровки данных
 }
 
-// Encrypt encrypts the plaintext using AES-GCM.
+// Encrypt шифрует открытый текст с помощью AES-GCM.
 func (c *GCMAESCryptographer) Encrypt(plaintext []byte) ([]byte, error) {
 	aesblock, err := aes.NewCipher(c.Key)
 	if err != nil {
@@ -42,7 +42,7 @@ func (c *GCMAESCryptographer) Encrypt(plaintext []byte) ([]byte, error) {
 	return aesgcm.Seal(nonce, nonce, plaintext, nil), nil
 }
 
-// Decrypt decrypts the ciphertext using AES-GCM.
+// Decrypt расшифровывает зашифрованный текст с помощью AES-GCM.
 func (c *GCMAESCryptographer) Decrypt(ciphertext []byte) ([]byte, error) {
 	aesblock, err := aes.NewCipher(c.Key)
 	if err != nil {

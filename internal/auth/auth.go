@@ -2,7 +2,6 @@ package auth
 
 import (
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -42,6 +41,7 @@ func BuildJWTString(userID int64) (string, error) {
 	return tokenString, nil
 }
 
+// Получаем UserID из JWT токена
 func GetUserID(tokenString string) int64 {
 	claims := &claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims,
@@ -60,18 +60,4 @@ func GetUserID(tokenString string) int64 {
 	}
 
 	return claims.UserID
-}
-
-func CheckAuth(r *http.Request) int64 {
-	token, err := r.Cookie("Authorization")
-	var userID int64
-	if err != nil {
-		return -1
-	} else {
-		userID = GetUserID(token.Value)
-		if userID < 0 {
-			return -1
-		}
-	}
-	return userID
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
+// Команда для сохранения логина/пароля
 func SavePassword(cond *types.Condition) {
 	name := getStringData("Enter brief description login/password")
 	login := getStringData("Enter login")
@@ -30,6 +31,7 @@ func SavePassword(cond *types.Condition) {
 	fmt.Println("Save password successful")
 }
 
+// Команда для загрузки логина пароля
 func GetPassword(cond *types.Condition) {
 	name := getStringData("Enter brief description login/password")
 

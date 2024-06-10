@@ -12,6 +12,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
+// Команда для сохранения бинарного файла
 func SaveFile(cond *types.Condition) {
 	name := getStringData("Enter brief description file")
 	path := getStringData("Enter file path")
@@ -43,6 +44,7 @@ func SaveFile(cond *types.Condition) {
 	fmt.Println("Save file successful")
 }
 
+// Команда для загрузки бинарного файла
 func GetFile(cond *types.Condition) {
 	name := getStringData("Enter brief description file")
 	path := getStringData("Enter path to save file")
@@ -58,6 +60,10 @@ func GetFile(cond *types.Condition) {
 		return
 	}
 	buf := biu.BinaryStringToBytes(resp.Text)
-	os.WriteFile(path, buf, fs.FileMode(os.O_CREATE))
+	err = os.WriteFile(path, buf, fs.FileMode(os.O_CREATE))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Printf("File %s saved to %s\n", name, path)
 }

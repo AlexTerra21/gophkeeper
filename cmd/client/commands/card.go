@@ -9,6 +9,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
+// Команда для сохранения данных карты
 func SaveCard(cond *types.Condition) {
 	name := getStringData("Enter brief description card")
 	number := getStringData("Enter card number")
@@ -34,6 +35,7 @@ func SaveCard(cond *types.Condition) {
 	fmt.Println("Save card successful")
 }
 
+// Команда для загрузки данных карты
 func GetCard(cond *types.Condition) {
 	name := getStringData("Enter brief description card")
 

@@ -17,6 +17,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
+// Реализация контракта SavePassword
 func (s *Service) SavePassword(ctx context.Context, req *pb.SavePasswordRequest) (*pb.Empty, error) {
 
 	userID := GetUserIDFromMetadata(ctx)
@@ -53,6 +54,7 @@ func (s *Service) SavePassword(ctx context.Context, req *pb.SavePasswordRequest)
 	return &pb.Empty{}, nil
 }
 
+// Реализация контракта GetPassword
 func (s *Service) GetPassword(ctx context.Context, req *pb.GetSecretRequest) (*pb.PasswordResponse, error) {
 	userID := GetUserIDFromMetadata(ctx)
 	if userID < 0 {
@@ -79,6 +81,7 @@ func (s *Service) GetPassword(ctx context.Context, req *pb.GetSecretRequest) (*p
 	}, nil
 }
 
+// Реализация контракта SaveCard
 func (s *Service) SaveCard(ctx context.Context, req *pb.SaveCardRequest) (*pb.Empty, error) {
 	userID := GetUserIDFromMetadata(ctx)
 	if userID < 0 {
@@ -116,6 +119,7 @@ func (s *Service) SaveCard(ctx context.Context, req *pb.SaveCardRequest) (*pb.Em
 	return &pb.Empty{}, nil
 }
 
+// Реализация контракта GetCard
 func (s *Service) GetCard(ctx context.Context, req *pb.GetSecretRequest) (*pb.CardResponse, error) {
 	userID := GetUserIDFromMetadata(ctx)
 	if userID < 0 {
@@ -144,6 +148,7 @@ func (s *Service) GetCard(ctx context.Context, req *pb.GetSecretRequest) (*pb.Ca
 	}, nil
 }
 
+// Реализация контракта SaveText
 func (s *Service) SaveText(ctx context.Context, req *pb.SaveTextRequest) (*pb.Empty, error) {
 	userID := GetUserIDFromMetadata(ctx)
 	if userID < 0 {
@@ -179,6 +184,7 @@ func (s *Service) SaveText(ctx context.Context, req *pb.SaveTextRequest) (*pb.Em
 	return &pb.Empty{}, nil
 }
 
+// Реализация контракта GetText
 func (s *Service) GetText(ctx context.Context, req *pb.GetSecretRequest) (*pb.TextResponse, error) {
 	userID := GetUserIDFromMetadata(ctx)
 	if userID < 0 {

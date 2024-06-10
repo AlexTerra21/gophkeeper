@@ -8,6 +8,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
+// Тестирование пары Register-Login
 func TestService_Register_Login(t *testing.T) {
 	service, err := PrepareTestEnv()
 	if err != nil {

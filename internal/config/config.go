@@ -39,6 +39,7 @@ func NewConfig() (*Config, error) {
 	return config, nil
 }
 
+// Вывод конфигурации в JSON
 func (c Config) Json() json.RawMessage {
 	b, err := json.Marshal(&c)
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/pb"
 )
 
+// Сервис gRPC
 type Service struct {
 	pb.UnimplementedGophkeeperServer
 
@@ -16,6 +17,7 @@ type Service struct {
 	storage *storage.Storage
 }
 
+// Конструктор gRPC
 func New(cfg *config.Config,
 	log *slog.Logger,
 	storage *storage.Storage) (*Service, error) {

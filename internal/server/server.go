@@ -18,6 +18,7 @@ import (
 	"github.com/AlexTerra21/gophkeeper/internal/storage"
 )
 
+// Интерсептор для логирования
 func logInterceptor(logger *slog.Logger) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
 		logger.Info("gRPC request",
@@ -28,6 +29,7 @@ func logInterceptor(logger *slog.Logger) grpc.UnaryServerInterceptor {
 	}
 }
 
+// Интерсептор для аутентификации
 func authInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
 	if strings.Contains(info.FullMethod, "Register") || strings.Contains(info.FullMethod, "Login") {
 		return handler(ctx, req)
@@ -49,6 +51,7 @@ func authInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, h
 	return handler(newCtx, req)
 }
 
+// Инициализация и настройка gRPC сервера
 func NewGRPCServer(lc fx.Lifecycle, config *config.Config, logger *slog.Logger, storage *storage.Storage) (*grpc.Server, error) {
 
 	tlsCredentials, err := loadTLSCredentials()
@@ -91,6 +94,7 @@ func NewGRPCServer(lc fx.Lifecycle, config *config.Config, logger *slog.Logger, 
 	return srv, nil
 }
 
+// Загрузка сертификатов
 func loadTLSCredentials() (credentials.TransportCredentials, error) {
 	// Load server's certificate and private key
 	serverCert, err := tls.LoadX509KeyPair("cert/server-cert.pem", "cert/server-key.pem")
