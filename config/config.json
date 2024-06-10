@@ -1,0 +1,4 @@
+{
+    "db_conn": "postgresql://gopherkeeper:gopherkeeper@localhost/gopherkeeper?sslmode=disable",
+    "log_level": "debug"
+}
